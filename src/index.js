@@ -10,6 +10,9 @@ app.use(express.json());
 
 //routes
 app.use(require('./routes/producto'));
+app.use(require('./routes/auditoria'));
+app.use(require('./routes/usuario'));
+app.use(require('./routes/auth'));
 
 //iniciar servidor
 app.listen(app.get('port'), () => {

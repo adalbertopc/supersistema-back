@@ -37,48 +37,62 @@ router.get('/producto/:id', (req, res) => {
 
 //AGREGAR UN NUEVO REGISTRO A LA TABLA
 router.post('/producto', (req, res) => {
-	const { nombre, precio } = req.body;
+	const { idUsuario, nombre, precio } = req.body;
 	//llamamos a nuestro procedimiento almacenado
-	const query = `call agregarProducto(?,?);`;
+	const query = `call agregarProducto(?,?,?);`;
 
-	connection.query(query, [nombre, precio], (err, rows, fields) => {
-		if (!err) {
-			res.json({ status: 'producto agregado' });
-		} else {
-			console.log(err);
-			res.json({ status: 'hubo un error inesperado' });
+	connection.query(
+		query,
+		[idUsuario, nombre, precio],
+		(err, rows, fields) => {
+			if (!err) {
+				res.json({ status: 'producto agregado' });
+			} else {
+				console.log(err);
+				res.json({ status: 'hubo un error inesperado' });
+			}
 		}
-	});
+	);
 });
 
 //ACTUALIZAR UN REGISTRO
 router.put('/producto/:id', (req, res) => {
 	const { nombre, precio } = req.body;
 	const { id } = req.params;
-	const query = `call actualizarProducto(?,?,?);`;
-	connection.query(query, [id, nombre, precio], (err, rows, fields) => {
-		if (!err) {
-			res.json({ status: 'producto actualizado' });
-		} else {
-			console.log(err);
-			res.json({ status: 'error al actualizar intente de nuevo' });
+	const query = `call actualizarProducto(?,?,?,?);`;
+	connection.query(
+		query,
+		[idUsuario, id, nombre, precio],
+		(err, rows, fields) => {
+			if (!err) {
+				res.json({ status: 'producto actualizado' });
+			} else {
+				console.log(err);
+				res.json({
+					status: 'error al actualizar intente de nuevo',
+				});
+			}
 		}
-	});
+	);
 });
 
 //Borrar un registro
 router.delete('/producto/:id', (req, res) => {
 	const { id } = req.params;
-	connection.query('call eliminarProducto(?)', [id], (err, rows, fields) => {
-		if (!err) {
-			return res.json({ status: 'producto eliminado' });
-		} else {
-			console.log(err);
-			return res.json({
-				status: 'error al eliminar intente de nuevo',
-			});
+	connection.query(
+		'call eliminarProducto(?,?)',
+		[idUsuario, id],
+		(err, rows, fields) => {
+			if (!err) {
+				return res.json({ status: 'producto eliminado' });
+			} else {
+				console.log(err);
+				return res.json({
+					status: 'error al eliminar intente de nuevo',
+				});
+			}
 		}
-	});
+	);
 });
 
 module.exports = router;
